@@ -23,7 +23,7 @@ const Home = () => {
           _id: res.data[0]._id
         }
         console.log(profile)
-        Axios.post(`${process.env.NEXTAUTH_URL}api/profile/profile}`,
+        Axios.post(`${process.env.NEXTAUTH_URL}api/profile/profile`,
               JSON.stringify(profile),
               { headers: { "Content-Type": "application/json" } }
               )
@@ -67,7 +67,7 @@ const Home = () => {
     }
   }
   const createUser = async () => {
-    await fetch(`${process.env.NEXTAUTH_URL}api/users/user}`, {
+    await fetch(`${process.env.NEXTAUTH_URL}api/users/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
