@@ -16,14 +16,14 @@ const Home = () => {
   //console.log(session)
   if(session){
     for(var i= 0; i<1 ;i++){
-      Axios.get("http://localhost:3000/api/users/" + session.user.email)
+      Axios.get(`${process.env.NEXTAUTH_URL}/api/users/${session.user.email}`)
       .then((res) => {
         console.log(res)
         const profile = {
           _id: res.data[0]._id
         }
         console.log(profile)
-        Axios.post("http://localhost:3000/api/profile/profile",
+        Axios.post(`${process.env.NEXTAUTH_URL}/api/profile/profile}`,
               JSON.stringify(profile),
               { headers: { "Content-Type": "application/json" } }
               )
@@ -67,7 +67,7 @@ const Home = () => {
     }
   }
   const createUser = async () => {
-    await fetch("http://localhost:3000/api/users/user", {
+    await fetch(`${process.env.NEXTAUTH_URL}/api/users/user}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,11 +163,6 @@ const Home = () => {
             className="w-8 h-8 rounded-full border-slate-400 border-2 mr-2 grid place-content-center">
             <IoLogoFacebook className="text-gray-600 dark:text-white" />
           </button>
-          {/* <button 
-            onClick={() => signIn("twitter")}
-            className="w-8 h-8 rounded-full border-slate-400 border-2 mr-2 grid place-content-center">
-            <FaTwitter className="text-gray-600 dark:text-white" />
-          </button> */}
         </div>
         <p className="text-slate-400 text-center">
           already a member?{" "}

@@ -23,43 +23,18 @@ const Changeinfo = () => {
     info();
     async function info() {
       console.log("query: " + router.query.email);
-      Axios.get("http://localhost:3000/api/users/" + router.query.email)
+      Axios.get(`${process.env.NEXTAUTH_URL}/api/users/${router.query.email}`)
         .then((res) => {
           console.log(res);
           setData(res.data[0]);
           setLoading(true);
           const getId = res.data[0]._id
-          Axios.get("http://localhost:3000/api/profile/" + getId)
+          Axios.get(`${process.env.NEXTAUTH_URL}/api/profile/${getId}`)
                .then((res) => {
                   console.log(res)
                   console.log(res.data);
                   setDataProfile(res.data);
                   setLoadingProfile(true);
-                    /* if (res.status != 200) {
-                      const id = {
-                        _id: getId,
-                      };
-                      Axios.post(
-                        "http://localhost:3000/api/profile/profile",
-                        JSON.stringify(id),
-                        { headers: { "Content-Type": "application/json" } }
-                      )
-                            .then((res) => {
-                              if (res.status == 200) {
-                                Axios.get(
-                                  "http://localhost:3000/api/profile/" + res.data[0]._id
-                                  )
-                                  .then((res) => {
-                                    setDataProfile(res.data[0]);
-                                    setLoadingProfile(true);
-                                    console.log(res.data)
-                                  })
-                                  .catch((err) => console.log(err));
-                              }
-                            })
-                            .catch((err) => console.log(err));
-                    } */
-                  
                 })
                 .catch((e) => {
                   console.log(e);
@@ -128,7 +103,7 @@ const Changeinfo = () => {
       }
     });
     await Axios.put(
-      "http://localhost:3000/api/profile/" + data._id,
+      `${process.env.NEXTAUTH_URL}/api/profile/${data._id}`,
       formData
     )
       .then((res) => {
@@ -145,7 +120,7 @@ const Changeinfo = () => {
       });
       console.log(user);
       await Axios.put(
-        "http://localhost:3000/api/users/" + data._id,
+        `${process.env.NEXTAUTH_URL}/api/users/${data._id}`,
         JSON.stringify(user),
         { headers: { "Content-Type": "application/json" } }
       )
@@ -218,11 +193,6 @@ const Changeinfo = () => {
                   onChange={handleChangeImg}
                 />
                 <Image
-                  /* src={
-                      dataProfile.photo
-                        ? `/data/uploads/${dataProfile.photo.name}`
-                        : fileItem
-                    } */
                   src={fileItem ? fileItem : logo}
                   className="rounded-md"
                   width={100}

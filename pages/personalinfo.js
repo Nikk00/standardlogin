@@ -25,12 +25,12 @@ const Personalinfo = () => {
         setLoadingProfile(true)
         info()
         async function info(){
-            await fetch("http://localhost:3000/api/users/"+router.query.email, {
+            await fetch(`${process.env.NEXTAUTH_URL}/api/users/${router.query.email}`, {
                 method: "GET"
             }).then((res)=> res.json()).then((data) => {
                 setData(data)
                 setLoading(false)
-                fetch("http://localhost:3000/api/profile/"+data[0]._id, {
+                fetch(`${process.env.NEXTAUTH_URL}/api/profile/${data[0]._id}`, {
                     method: "GET"
                 }).then((res)=> res.json()).then((data) => {
                     console.log(data)
@@ -161,12 +161,4 @@ const Personalinfo = () => {
     </div>
   )
 }
-/* 
-export async function getServerSideProps(router) {
-            const res = await fetch(`http://localhost:3000/api/users/`+router.query)
-            const data = await res.json()
-            //console.log(data)
-            // Pass data to the page via props
-            return { props: { data } }
-} */
 export default Personalinfo
