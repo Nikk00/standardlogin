@@ -2,6 +2,7 @@ import { Schema, model, models } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+const salRounds = 10
 const userSchema = new Schema(
   {
     email: {
@@ -13,10 +14,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "The password is required "],
-      unique: true,
-      trim: true,
-      maxlength: [40, "password cannot be grater than 40 characters"],
+      required: true,
     },
   },
   {
@@ -25,17 +23,47 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.methods.encryptPassword = async function () {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-};
+userSchema.pre('save', function(next){
+  if(this.isNew || this.isModified('password')){
+    const document = this
 
-userSchema.statics.comparePassword = async function (password, hash) {
-  return await bcrypt.compare(password, hash);
-};
+    bcrypt.hash(document.password, salRounds, (err, hashedPassword)=>{
+      if(err){
+        next(err)
+      }else{
+        document.password = hashedPassword;
+        next()
+      }
+    })
+  }else{
+    next()
+  }
+})
+userSchema.pre('findByIdAndUpdate', function(next){
+  if(this.isNew || this.isModified('password')){
+    const document = this
+    bcrypt.hash(document.password, salRounds, (err, hashedPassword)=>{
+      if(err){
+        next(err)
+      }else{
+        document.password = hashedPassword;
+        next()
+      }
+    })
+  }else{
+    next()
+  }
+})
 
-userSchema.methods.generateToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET);
-};
+userSchema.methods.isCorrectPassword = function(password, callback){
+  bcrypt.compare(password, this.password, function(err,same){
+    if(err){
+      callback(err)
+    }else{
+      callback(err, same)
+    }
+  })
+}
+
 
 export default models.user || model("user", userSchema);

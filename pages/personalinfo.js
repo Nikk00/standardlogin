@@ -1,26 +1,68 @@
 /* import type { NextPage } from 'next' */
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Nav from '../components/nav'
-import { getSession } from 'next-auth/react'
+import { useSession,getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-
-const logo = require('/public/avatar.png'); 
+import swal from '@sweetalert/with-react';
+const logo = require('/public/data/uploads/avatar.png'); 
 
 const Personalinfo = () => {
+    const [data, setData] = useState(null)
+    const [isLoading, setLoading] = useState(false)
+    const { data: session } = useSession()
+    //console.log(session)
+    const [dataProfile, setDataProfile] = useState(null)
+    const [isLoadingProf, setLoadingProfile] = useState(false)
 
+    const router = useRouter()
+    //console.log(router.query.email);
+    useEffect(() => {
+        /* const profile = {} */
+        setLoading(true)
+        setLoadingProfile(true)
+        info()
+        async function info(){
+            await fetch("http://localhost:3000/api/users/"+router.query.email, {
+                method: "GET"
+            }).then((res)=> res.json()).then((data) => {
+                setData(data)
+                setLoading(false)
+                fetch("http://localhost:3000/api/profile/"+data[0]._id, {
+                    method: "GET"
+                }).then((res)=> res.json()).then((data) => {
+                    console.log(data)
+                    setDataProfile(data)
+                    setLoadingProfile(false)
+                }).catch( (e) =>{
+                    console.log(e)
+                })
+            }).catch( (e) =>{
+                console.log(e)
+            })
+        }
+    }, [])
+      if (isLoading) return <p>Loading...</p>
+      if (!data) return <p>No profile data</p>
+
+      if (isLoadingProf) return <p>Loading...</p>
+      if (!dataProfile) return <p>No profile data</p>
   return (
     <div className="font-sans bg-white">
-        <Nav />
+        <Nav 
+        name={dataProfile.name} 
+        img={dataProfile.photo ? (dataProfile.photo.name) : (null)}
+        email={router.query.email}
+        />
         <div className='flex flex-col items-center'>
             <div className='grid place-content-center mb-4'>
                 <h1 className='text-center font-semibold text-2xl'>Personal info</h1>
                 <p className='text-center'>Basic info, like your name and photo</p>
             </div>
             
-            <div className='grid w-1/2 h-1/2 grid-rows-7  bg-white border-solid rounded-lg border-slate-200 border-2'>
+            <div className='grid w-full h-full lg:w-1/2 lg:h-1/2 md:w-1/2 md:h-1/2 grid-rows-7  bg-white lg:border-solid md:border-solid rounded-lg border-slate-200 border-2 border-hidden'>
                 <div className='row-span-1 border-solid border-slate-300 border-b-2'>
                     <div className='grid grid-cols-2 gap-2 p-8'>
                         <div>
@@ -28,7 +70,7 @@ const Personalinfo = () => {
                             <p>Some info may be visible to other people</p>
                         </div>
                         <div className='grid place-content-center justify-end'>
-                            <Link href='/changeinfo'><button className='w-32 h-10 rounded-lg border-2'>Edit</button></Link>
+                            <button className='w-32 h-10 rounded-lg border-2' onClick={()=>{router.push({pathname: '/changeinfo', query: {email: data[0].email} })}}>Edit</button>
                         </div>
                     </div>
                 </div>
@@ -38,8 +80,13 @@ const Personalinfo = () => {
                                 <p className='text-gray-400'>PHOTO</p>
                             </div>
                             <div className='grid col-span-2 place-content-center justify-start pt-2 pb-2 '>
-                                <Image src={logo} className='rounded-md' width={58} height={58} alt='' />
+                                
                                 {/* <img className='w-20 h-20 rounded-md' src={session.user.image} alt=''></img> */}
+                                {dataProfile.photo ? (
+                                <Image src={`/data/uploads/${dataProfile.photo.name}`} className='rounded-md' width={58} height={58} alt='' />
+                            ) : (
+                                <Image src={logo} className='rounded-md' width={58} height={58} alt='' />
+                            )}
                             </div>
                     </div>
                 </div>
@@ -49,7 +96,11 @@ const Personalinfo = () => {
                             <p className='text-gray-400'>NAME</p>
                         </div>
                         <div className='grid col-span-2 place-content-center justify-start'>
-                            <p>asdasd</p>
+                            <p>{dataProfile.name ? (
+                                <p>{dataProfile.name}</p>
+                            ) : (
+                                <p>New User</p>
+                            )}</p>
                         </div>
                     </div>
                 </div>
@@ -59,7 +110,11 @@ const Personalinfo = () => {
                             <p className='text-gray-400'>BIO</p>
                         </div>
                         <div className='grid col-span-2 place-content-center justify-start'>
-                            <p>I am software developer and a big fan of devchallenges..</p>
+                            <p>{dataProfile.bio ? (
+                                <p>{dataProfile.bio}</p>
+                            ) : (
+                                <p>I am software developer and a big fan of devchallenges..</p>
+                            )}</p>
                         </div>
                     </div>
                 </div>
@@ -69,7 +124,11 @@ const Personalinfo = () => {
                             <p className='text-gray-400'>PHONE</p>
                         </div>
                         <div className='grid col-span-2 place-content-center justify-start'>
-                            <p>+569 58597458</p>
+                            <p>{dataProfile.phone ? (
+                                <p>{dataProfile.phone}</p>
+                            ) : (
+                                <p>12345678</p>
+                            )}</p>
                         </div>
                     </div>
                 </div>
@@ -79,7 +138,11 @@ const Personalinfo = () => {
                             <p className='text-gray-400'>EMAIL</p>
                         </div>
                         <div className='grid col-span-2 place-content-center justify-start'>
-                            <p>asdas</p>
+                            <p>{data[0].email ? (
+                                <p>{data[0].email}</p>
+                            ) : (
+                                <p>ejemplo@gmail.com</p>
+                            )}</p>
                         </div>
                     </div>
                 </div>
@@ -98,21 +161,12 @@ const Personalinfo = () => {
     </div>
   )
 }
-
-export const getServerSideProps = async (context) => {
-    const session = await getSession(context)
-  
-    /* if(!session) return {
-      redirect: {
-        destination: '/login',
-        permanent: false
-      }
-    } */
-    
-    console.log(session)
-    return {
-      props:{ session }
-    }
-}
-
+/* 
+export async function getServerSideProps(router) {
+            const res = await fetch(`http://localhost:3000/api/users/`+router.query)
+            const data = await res.json()
+            //console.log(data)
+            // Pass data to the page via props
+            return { props: { data } }
+} */
 export default Personalinfo
