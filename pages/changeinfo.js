@@ -23,13 +23,13 @@ const Changeinfo = () => {
     info();
     async function info() {
       console.log("query: " + router.query.email);
-      Axios.get(`${process.env.NEXTAUTH_URL}api/users/${router.query.email}`)
+      Axios.get(`/api/users/${router.query.email}`)
         .then((res) => {
           console.log(res);
           setData(res.data[0]);
           setLoading(true);
           const getId = res.data[0]._id
-          Axios.get(`${process.env.NEXTAUTH_URL}api/profile/${getId}`)
+          Axios.get(`/api/profile/${getId}`)
                .then((res) => {
                   console.log(res)
                   console.log(res.data);
@@ -103,7 +103,7 @@ const Changeinfo = () => {
       }
     });
     await Axios.put(
-      `${process.env.NEXTAUTH_URL}api/profile/${data._id}`,
+      `/api/profile/${data._id}`,
       formData
     )
       .then((res) => {
@@ -120,7 +120,7 @@ const Changeinfo = () => {
       });
       console.log(user);
       await Axios.put(
-        `${process.env.NEXTAUTH_URL}api/users/${data._id}`,
+        `/api/users/${data._id}`,
         JSON.stringify(user),
         { headers: { "Content-Type": "application/json" } }
       )

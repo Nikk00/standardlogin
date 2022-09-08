@@ -25,12 +25,12 @@ const Personalinfo = () => {
         setLoadingProfile(true)
         info()
         async function info(){
-            await fetch(`${process.env.NEXTAUTH_URL}api/users/${router.query.email}`, {
+            await fetch(`/api/users/${router.query.email}`, {
                 method: "GET"
             }).then((res)=> res.json()).then((data) => {
                 setData(data)
                 setLoading(false)
-                fetch(`${process.env.NEXTAUTH_URL}api/profile/${data[0]._id}`, {
+                fetch(`/api/profile/${data[0]._id}`, {
                     method: "GET"
                 }).then((res)=> res.json()).then((data) => {
                     console.log(data)
