@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
-import TwitterProvider from "next-auth/providers/twitter";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
 export default NextAuth({
@@ -25,5 +24,6 @@ export default NextAuth({
       clientSecret: process.env.TWITTER_CLIENT_SECRET,
     }), */
   ],
-  /* debug: process.env.NODE_ENV !== "production", */
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV !== "production",
 });

@@ -75,7 +75,7 @@ const Home = () => {
         body: JSON.stringify(newUser),
       }).then((response)=>{
         console.log(response.status)
-        if(response.status != 400){
+        if(response.status == 200){
           swal("Ingreso Exitoso!", "You clicked the button!", "success");
           router.push({pathname: '/changeinfo', query: {email: newUser.email} });
         }
