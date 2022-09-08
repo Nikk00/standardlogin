@@ -22,14 +22,14 @@ const Login = () => {
   //console.log(session)
   if (session) {
     for (var i = 0; i < 1; i++) {
-      Axios.get(`${process.env.NEXTAUTH_URL}/api/users/${session.user.email}`)
+      Axios.get(`${process.env.NEXTAUTH_URL}api/users/${session.user.email}`)
         .then((res) => {
           console.log(res);
           const profile = {
             _id: res.data[0]._id,
           };
           console.log(profile);
-          Axios.get(`${process.env.NEXTAUTH_URL}/api/users/${res.data[0]._id}`)
+          Axios.get(`${process.env.NEXTAUTH_URL}api/users/${res.data[0]._id}`)
             .then((res) => {
               if (res.status == 200) {
                 swal("Ingreso Exitoso!", "You clicked the button!", "success");
@@ -40,7 +40,7 @@ const Login = () => {
               }
               if (res.status == 201) {
                 Axios.post(
-                  `${process.env.NEXTAUTH_URL}/api/profile/profile`,
+                  `${process.env.NEXTAUTH_URL}api/profile/profile`,
                   JSON.stringify(profile),
                   { headers: { "Content-Type": "application/json" } }
                 )
@@ -84,7 +84,7 @@ const Login = () => {
     await foundUser(user);
   };
   const foundUser = async (data) => {
-    await fetch(`${process.env.NEXTAUTH_URL}/api/users/user`, {
+    await fetch(`${process.env.NEXTAUTH_URL}api/users/user`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
