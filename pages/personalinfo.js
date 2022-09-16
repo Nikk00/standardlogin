@@ -63,12 +63,14 @@ const Personalinfo = () => {
       <span className="sr-only">Loading...</span>
   </div>
       if (!dataProfile) return <p>No profile data</p>
-      imagen = Buffer.from(dataProfile.photo.data).toString()
+
+      imagen = Buffer.from(dataProfile.photo.data).toString('base64')
+      const imageSrc = `data:${dataProfile.photo.contentType};base64,${imagen}`
   return (
     <div className="font-sans bg-white">
         <Nav 
         name={dataProfile.name} 
-        img={dataProfile.photo ? (dataProfile.photo.name) : (null)}
+        img={dataProfile.photo ? (imageSrc) : (null)}
         email={router.query.email}
         />
 
@@ -96,10 +98,8 @@ const Personalinfo = () => {
                                 <p className='text-gray-400'>PHOTO</p>
                             </div>
                             <div className='grid col-span-2 place-content-center justify-start pt-2 pb-2'>
-                            {/* <Image src={`/data/uploads/${dataProfile.photo.name}`} className='rounded-md' width={58} height={58} alt='' /> */}
-                                {/* <img className='w-20 h-20 rounded-md' src={session.user.image} alt=''></img> */}
                                 {dataProfile.photo ? (
-                                <Image src={`data:${dataProfile.photo.contentType};base64,${imagen}`} className='rounded-md' width={58} height={58} alt='' />
+                                <Image src={imageSrc} className='rounded-md' width={58} height={58} alt='' />
                             ) : (
                                 <Image src={logo} className='rounded-md' width={58} height={58} alt='' />
                             )}

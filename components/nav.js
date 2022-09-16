@@ -23,7 +23,7 @@ const Nav = ( prop ) => {
         <button className="flex items-center" onClick={handleClick}>
         {prop.img ? (
           <Image
-          src={`/data/uploads/${prop.img}`}
+          src={prop.img}
           className="rounded-md"
           width={38}
           height={38}

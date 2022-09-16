@@ -7,7 +7,8 @@ const fs = require('fs')
 const multer  = require('multer')
 dbConnect();
 const handler = nc(onError);
-const storage = multer.diskStorage({
+const storage = multer.memoryStorage()
+/* const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './public/data/uploads/')
   },
@@ -15,7 +16,7 @@ const storage = multer.diskStorage({
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
     cb(null, uniqueSuffix + '-'+ file.originalname)
   }
-})
+}) */
 const upload = multer({ storage: storage })
 
 let uploadFile = upload.single('myFile');
@@ -50,14 +51,14 @@ handler.put(async (req, res) => {
         if (!profile) return res.status(404).json({ msg: "Profile does not exists" });
         return res.status(200).json(profile);
       }else{
-        var img = fs.readFileSync(file.path);
-        var encode_img = img.toString('base64');
+        //var img = fs.readFileSync(file.path);
+        //var encode_img = img.toString('base64');
         console.log(file.filename)
         var final_img = {
           photo:{
             name: file.filename,
             contentType:file.mimetype,
-            data: encode_img
+            data: file.buffer
         }}
         const result = Object.assign(body,final_img);
         const profile = await Profile.findByIdAndUpdate(id, result, {

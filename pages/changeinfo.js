@@ -156,11 +156,13 @@ const Changeinfo = () => {
   <span className="sr-only">Loading...</span>
 </div>
   if (!dataProfile) return <p>No profile data</p>;
+  const imagen = Buffer.from(dataProfile.photo.data).toString('base64')
+  const imageSrc = `data:${dataProfile.photo.contentType};base64,${imagen}`
   return (
     <div className="font-sans bg-white ">
       <Nav
       name={dataProfile.name ? dataProfile.name : 'User'}
-      img={dataProfile.photo ? dataProfile.photo.name : null}
+      img={dataProfile.photo ? imageSrc : null}
       email={router.query.email}
       />
       <div className="flex flex-col items-center">
