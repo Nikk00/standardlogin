@@ -31,10 +31,16 @@ const Changeinfo = () => {
           const getId = res.data[0]._id
           Axios.get(`/api/profile/${getId}`)
                .then((res) => {
-                  console.log(res)
-                  console.log(res.data);
-                  setDataProfile(res.data);
-                  setLoadingProfile(true);
+                  if(res.status == 200){
+                    console.log(res)
+                    console.log(res.data);
+                    setDataProfile(res.data);
+                    setLoadingProfile(true);
+                  }else{
+                    router.push({
+                      pathname: "/"
+                    });
+                  }
                 })
                 .catch((e) => {
                   console.log(e);

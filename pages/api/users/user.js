@@ -1,10 +1,11 @@
 import user from "../../../models/user";
-import { dbConnect } from "../../../utils/mongoose";
+/* import { dbConnect } from "../../../utils/mongoose"; */
+import connectDB from '../../../utils/mongoose';
 import Profile from "../../../models/Profile";
 import onError from "../../../common/errormiddleware";
 import nc from "next-connect";
 const cors = require('cors')
-dbConnect();
+//dbConnect();
 const handler = nc(onError);
 handler.use(cors())
 handler.post(async (req, res) => {
@@ -43,4 +44,4 @@ handler.put(async (req, res) => {
   })
 });
 
-export default handler
+export default connectDB(handler)

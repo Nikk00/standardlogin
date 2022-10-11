@@ -1,12 +1,12 @@
 import user from "../../../models/user";
-import { dbConnect } from "../../../utils/mongoose";
+//import { dbConnect } from "../../../utils/mongoose";
+import connectDB from '../../../utils/mongoose';
 import onError from "../../../common/errormiddleware";
 import nc from "next-connect";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 const cors = require('cors')
-dbConnect();
 const handler = nc(onError);
 handler.use(cors())
 handler.get(async (req, res) => {
@@ -64,4 +64,4 @@ handler.delete(async (req, res) => {
     return res.status(400).json({ msg: error.message });
   }
 });
-export default handler
+export default connectDB(handler)

@@ -1,9 +1,8 @@
 import Profile from "../../../models/Profile";
-import { dbConnect } from "../../../utils/mongoose";
+import connectDB from "../../../utils/mongoose";
 import onError from "../../../common/errormiddleware";
 import nc from "next-connect";
 const cors = require('cors')
-dbConnect();
 const handler = nc(onError);
 handler.use(cors())
 handler.post(async (req, res) => {
@@ -30,4 +29,4 @@ handler.get(async (req, res) => {
     return res.status(400).json({ msg: error.message });
   }
 })
-export default handler
+export default connectDB(handler)

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Nav from '../components/nav'
 import { useSession,getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import Axios from "axios";
 import swal from '@sweetalert/with-react';
 const logo = require('/public/data/uploads/avatar.png'); 
 const Personalinfo = () => {
@@ -25,20 +26,26 @@ const Personalinfo = () => {
         setLoadingProfile(true)
         info()
         async function info(){
-            await fetch(`/api/users/${router.query.email}`, {
-                method: "GET"
-            }).then((res)=> res.json()).then((data) => {
-                setData(data)
-                setLoading(false)
-                fetch(`/api/profile/${data[0]._id}`, {
-                    method: "GET"
-                }).then((res)=> res.json()).then((data) => {
-                    console.log(data)
-                    setDataProfile(data)
-                    setLoadingProfile(false)
-                }).catch( (e) =>{
-                    console.log(e)
-                })
+            Axios.get(`/api/users/${router.query.email}`)
+            .then((res) => {
+                if(res.status == 200){
+                    console.log(res.data)
+                    setData(res.data)
+                    setLoading(false)
+                    Axios.get(`/api/profile/${res.data[0]._id}`)
+                    .then((res) => {
+                        console.log(res)
+                        setDataProfile(res.data)
+                        setLoadingProfile(false)
+                    }).catch( (e) =>{
+                        console.log(e)
+                    })
+                }else{
+                    router.push({
+                        pathname: "/"
+                      });
+                }
+                
             }).catch( (e) =>{
                 console.log(e)
             })

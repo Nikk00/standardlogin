@@ -1,16 +1,14 @@
+import mongoose from 'mongoose';
 
-import { connect, connection } from "mongoose";
-
-const conn = {
-  isConnected: false,
+const connectDB = handler => async (req, res) => {
+  if (mongoose.connections[0].readyState) {
+    // Use current db connection
+    return handler(req, res);
+  }
+  // Use new db connection
+  await mongoose.connect(process.env.MONGODB_URI);
+  console.log(mongoose.connection.db.databaseName);
+  return handler(req, res);
 };
 
-export async function dbConnect() {
-  const db = await connect(process.env.MONGODB_URI);
-  console.log(db.connection.db.databaseName);
-  conn.isConnected = db.connections[0].readyState;
-}
-
-connection.on("connected", () => console.log("Mongodb connected"));
-
-connection.on("error", (err) => console.error("Mongodb Errro:", err.message));
+export default connectDB;

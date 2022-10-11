@@ -1,22 +1,14 @@
 import Profile from "../../../models/Profile";
-import { dbConnect } from "../../../utils/mongoose";
+//import { dbConnect } from "../../../utils/mongoose";
+import connectDB from '../../../utils/mongoose';
 import onError from "../../../common/errormiddleware";
 import nc from "next-connect";
 const cors = require('cors')
 const fs = require('fs')
 const multer  = require('multer')
-dbConnect();
 const handler = nc(onError);
 const storage = multer.memoryStorage()
-/* const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './public/data/uploads/')
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, uniqueSuffix + '-'+ file.originalname)
-  }
-}) */
+
 const upload = multer({ storage: storage })
 
 let uploadFile = upload.single('myFile');
@@ -87,7 +79,7 @@ handler.delete(async (req, res) => {
     }
 })
 
-export default handler
+export default connectDB(handler)
 export const config = {
   api: {
     bodyParser: false, // Disallow body parsing, consume as stream
