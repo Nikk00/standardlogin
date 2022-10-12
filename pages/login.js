@@ -159,7 +159,7 @@ const Login = () => {
           or continue with these social profile
         </h1>
         <br></br>
-        <div className="flex justify-center m-1">
+        {/* <div className="flex justify-center m-1">
           <button
             onClick={() => signIn("github")}
             className="w-8 h-8 rounded-full border-slate-400 border-2 mr-2 grid place-content-center"
@@ -178,7 +178,7 @@ const Login = () => {
           >
             <IoLogoFacebook className="text-gray-600 dark:text-white" />
           </button>
-        </div>
+        </div> */}
         <br></br>
         <p className="text-slate-400 text-center">
           Don't have an account yet?{" "}

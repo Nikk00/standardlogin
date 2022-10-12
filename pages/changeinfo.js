@@ -162,8 +162,13 @@ const Changeinfo = () => {
   <span className="sr-only">Loading...</span>
 </div>
   if (!dataProfile) return <p>No profile data</p>;
-  const imagen = Buffer.from(dataProfile.photo.data).toString('base64')
-  const imageSrc = `data:${dataProfile.photo.contentType};base64,${imagen}`
+  var imagen
+  var imageSrc
+  if(dataProfile.photo != undefined){
+    imagen = Buffer.from(dataProfile.photo.data).toString('base64')
+    imageSrc = `data:${dataProfile.photo.contentType};base64,${imagen}`
+  }
+  
   return (
     <div className="font-sans bg-white ">
       <Nav

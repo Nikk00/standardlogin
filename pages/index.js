@@ -16,7 +16,6 @@ const Home = () => {
   //console.log(session)
   if(session){
     for(var i= 0; i<1 ;i++){
-      
       /* Axios.get(`/api/users/${session.user.email}`)
       .then((res) => {
         console.log(res)
@@ -149,7 +148,7 @@ const Home = () => {
         <h1 className="text-center text-slate-400 text-sm mt-2">
           or continue with these social profile
         </h1>
-        <div className="flex justify-center m-1">
+       {/*  <div className="flex justify-center m-1">
           <button
             onClick={() => signIn("github")}
             className="w-8 h-8 rounded-full border-slate-400 border-2 mr-2 grid place-content-center" data-modal-toggle="authentication-modal">
@@ -165,7 +164,7 @@ const Home = () => {
             className="w-8 h-8 rounded-full border-slate-400 border-2 mr-2 grid place-content-center" data-modal-toggle="authentication-modal">
             <IoLogoFacebook className="text-gray-600 dark:text-white" />
           </button>
-        </div>
+        </div> */}
         <p className="text-slate-400 text-center">
           already a member?{" "}
           <a className="text-sky-500" href="/login">
